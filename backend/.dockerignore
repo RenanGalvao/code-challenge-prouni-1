@@ -1,0 +1,15 @@
+# Folders
+dist/
+node_modules/
+**/test/
+
+# Files
+.env*
+*.md
+*.json
+.dockerignore
+Dockerfile
+
+!package.json
+!package-lock.json
+!ts*.json
