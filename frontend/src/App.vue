@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import './assets/main.css'
-import Button from './components/Button.vue'
+import Button from '@/components/Button.vue'
 </script>
 
 <template>
