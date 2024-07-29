@@ -44,23 +44,23 @@ Este desafio foi feito após o [Desafio 2](https://github.com/RenanGalvao/code-c
 
 
 ## Uso <a name="uso"></a>
-- URL: localhost:3000
+- URL: http://localhost:3000
 
 ### Desenvolvimento
 - Navegue até a pasta ``backend``
 - Crie uma cópia do arquivo ``.env.example`` com o nome de ``.env``
 - Instale os pacotes necessários ``npm install``
-- ``npm run dev``
+- Suba o servidor ``npm run dev``
 
 ### "Produção"
 Inicie o projeto a partir do ``docker-compose.yml`` da pasta raiz.
 
 ### Rotas
-- ``GET /tasks`` retorna a lista de tarefas cadastrados, aceita parâmetros de pesquisa ``page`` e ``itemsPerPage`` ambos valores númericos.
+- ``GET /tasks`` retorna a lista de tarefas cadastradas, aceita parâmetros de pesquisa ``page`` e ``itemsPerPage``, sendo ambos valores númericos.
 - ``GET /tasks/:id`` retorna dados da tarefa associado ao id.
 - ``POST /tasks`` cria uma nova tarefa e retorna seus dados, espera um JSON com a chave ``description`` apenas.
-- ``PUT /tasks/:id`` atualiza e retorna os dados da tarefa associado ao id, o JSON esperado contém a mesma chave que o da criação, como existe apenas um campo (modificável) ele é obrigatório.
-- ``DELETE /tasks/:id`` remove a tarefa associado ao id.
+- ``PUT /tasks/:id`` atualiza e retorna os dados da tarefa associada ao id, o JSON esperado contém a mesma chave que o da criação, como existe apenas um campo (modificável) ele é obrigatório.
+- ``DELETE /tasks/:id`` remove a tarefa associada ao id.
 
 
 ## Principais Tecnologias <a name="tec"></a>
