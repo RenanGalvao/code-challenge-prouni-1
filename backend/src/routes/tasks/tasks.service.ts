@@ -7,7 +7,7 @@ import { throwValidationError } from '@src/utils'
 
 async function findMany(query?: PaginationDto) {
     const { limit, offset } = sqlite3Service.getLimitOffsetFromQuery(query)
-    const sql = 'SELECT id, description, createdAt, updatedAt FROM tasks LIMIT $limit OFFSET $offset'
+    const sql = 'SELECT id, description, done, createdAt, updatedAt FROM tasks LIMIT $limit OFFSET $offset'
     const values = {
         $limit: limit,
         $offset: offset
@@ -17,7 +17,7 @@ async function findMany(query?: PaginationDto) {
 }
 
 async function findOne(id: string) {
-    const sql = 'SELECT id, description, createdAt, updatedAt FROM tasks WHERE id = $id'
+    const sql = 'SELECT id, description, done, createdAt, updatedAt FROM tasks WHERE id = $id'
     const values = {
         $id: id,
     }
@@ -25,9 +25,10 @@ async function findOne(id: string) {
 }
 
 async function create(body: CreateTaskDto) {
-    const sql = 'INSERT INTO tasks (description) VALUES ($description) RETURNING id, description, createdAt, updatedAt'
+    const sql = 'INSERT INTO tasks (description, done) VALUES ($description, $done) RETURNING id, description, done, createdAt, updatedAt'
     const values = {
-        $description: body.description
+        $description: body.description,
+        $done: body.done
     }
     return (await sqlite3Service.getAsync<TaskModel>(sql, values))
 }
@@ -48,9 +49,9 @@ async function update(id: string, body: UpdateTaskDto) {
             index++
         }
     } else {
-        throwValidationError('Um campo ao menos deve ser atualizado', ['description'])
+        throwValidationError('Um campo ao menos deve ser atualizado', ['description', 'done'])
     }
-    queryBuild.push(`WHERE id = ? RETURNING id, description, createdAt, updatedAt`)
+    queryBuild.push(`WHERE id = ? RETURNING id, description, done, createdAt, updatedAt`)
     values.push(id)
 
     return (await sqlite3Service.getAsync<TaskModel>(queryBuild.join(' '), values))

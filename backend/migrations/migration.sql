@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS "tasks" (
     "id" INTEGER PRIMARY KEY,
     "description" TEXT NOT NULL,
+    "done" INTEGER NOT NULL,
     "createdAt" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TEXT
 );
