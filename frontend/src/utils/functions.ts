@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { logger } from '@/utils'
+import { logger } from '@/utils/index.js'
 
 export function appInitLog(router: Router) {
 	for (const layer of router.stack) {

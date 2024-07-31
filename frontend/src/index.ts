@@ -1,47 +1,54 @@
 // based on https://github.com/bluwy/create-vite-extra/tree/master/template-ssr-vue
+// and https://github.com/vitejs/vite-plugin-vue
 import { ViteDevServer } from 'vite'
 import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import { readFileSync } from 'fs'
-import config from '@/config/index'
-import { RateLimiter, ExceptionHandler, Custom404 } from '@/middlewares'
-import { logger, appInitLog } from '@/utils'
+import config from '@/config/index.js'
+import { RateLimiter, ExceptionHandler, Custom404 } from '@/middlewares/index.js'
+import { logger, appInitLog } from '@/utils/index.js'
 
 // Cached production assets
 const templateHtml = config.app.isProduction
   ? readFileSync('./dist/client/index.html', 'utf-8')
   : ''
 const ssrManifest = config.app.isProduction
-  ? readFileSync('./dist/client/.vite/ssr-manifest.json', 'utf-8')
-  : undefined
+  ? JSON.parse(readFileSync('./dist/client/.vite/ssr-manifest.json', 'utf-8'))
+  : {}
 
 const app = express();
-let vite: ViteDevServer
 
-// too much trouble with top-level await and re-mapped imports from typescript
-// using this hack instead
-(async () => {
-  // Add Vite or respective production middlewares
-  if (!config.app.isProduction) {
-    const { createServer } = await import('vite')
-    vite = await createServer({
-      server: { middlewareMode: true },
-      appType: 'custom',
-      base: config.app.base
-    })
-    app.use(vite.middlewares)
-  } else {
-    const compression = (await import('compression')).default
-    const sirv = (await import('sirv')).default
-    app.use(compression())
-    app.use(config.app.base, sirv('./dist/client', { extensions: [] }))
-  }
-})()
+// Add Vite or respective production middlewares
+let vite: ViteDevServer
+if (!config.app.isProduction) {
+  const { createServer } = await import('vite')
+  vite = await createServer({
+    base: config.app.base,
+    appType: 'custom',
+    logLevel: !config.app.isProduction ? 'info' : 'error',
+    server: {
+      middlewareMode: true,
+      hmr: false
+    },
+  })
+  app.use(vite.middlewares)
+} else {
+  const compression = (await import('compression')).default
+  const sirv = (await import('sirv')).default
+  app.use(compression())
+  app.use(config.app.base, sirv('./dist/client', { extensions: [] }))
+}
 
 // Security
 app.disable('x-powered-by')
-app.use(helmet())
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      'default-src': ["'self'", 'http://localhost:3000', 'http://api:3000']
+    }
+  }
+}))
 app.use(cors({
   exposedHeaders: [
     'X-Total-Count', 'X-Total-Pages',
@@ -59,8 +66,7 @@ app.use('*', async (req, res) => {
   try {
     const url = req.originalUrl.replace(config.app.base, '')
 
-    let template
-    let render
+    let template, render
     if (!config.app.isProduction) {
       // Always read fresh template in development
       template = readFileSync('./index.html', 'utf-8')
@@ -72,16 +78,15 @@ app.use('*', async (req, res) => {
       render = (await import('./dist/server/entry-server.js')).render
     }
 
-    const rendered = await render(url, ssrManifest)
-
+    const [appHtml, preloadLinks] = await render(url, ssrManifest)
     const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, rendered.html ?? '')
+      .replace(`<!--app-head-->`, preloadLinks)
+      .replace(`<!--app-html-->`, appHtml)
 
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(html)
+    res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
   } catch (e: any) {
     vite?.ssrFixStacktrace(e)
-    console.log(e.stack)
+    logger.warn(e.stack)
     res.status(500).end(e.stack)
   }
 })

@@ -1,3 +1,3 @@
-export * from './custom-404.middleware'
-export * from './exception.middleware'
-export * from './rate-limiter.middleware'
+export * from './custom-404.middleware.js'
+export * from './exception.middleware.js'
+export * from './rate-limiter.middleware.js'

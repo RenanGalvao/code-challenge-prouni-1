@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import './assets/main.css'
-import Button from '@/components/Button.vue'
+import Todo from '@/components/Todo/Index.vue'
 </script>
 
 <template>
-    <Button></Button>
+    <Todo />
 </template>

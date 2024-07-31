@@ -5,7 +5,9 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "vite-node src/server.ts",
+    "start": "node dist/index.js",
+    "dev": "vite-node src/index.ts",
+    "prebuild": "tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --ssrManifest --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.js --outDir dist/server",
@@ -29,8 +31,10 @@
     "helmet": "^7.1.0",
     "rate-limiter-flexible": "^5.0.3",
     "sirv": "^2.0.4",
+    "vite": "^5.3.5",
     "vue": "^3.4.34",
-    "winston": "^3.13.1"
+    "winston": "^3.13.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
@@ -41,8 +45,9 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5",
-    "vite-node": "^2.0.4"
+    "vite-node": "^2.0.5"
   }
 }

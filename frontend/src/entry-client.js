@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp } from './main'
+import { createApp } from './shared'
 
 const { app } = createApp()
 app.mount('#app')

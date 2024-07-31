@@ -1,7 +1,7 @@
 import { RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible'
-import config from '@/config'
+import config from '@/config/index.js'
 import { Request, Response, NextFunction } from 'express'
-import { HTTP_ERROR_CODES } from '@/const'
+import { HTTP_ERROR_CODES } from '@/const/index.js'
 
 const globalRateLimiter = new RateLimiterMemory(config.rateLimiter.global)
 

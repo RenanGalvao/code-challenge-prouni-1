@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { logger } from '@/utils'
+import { logger } from '@/utils/index.js'
 
 export function ExceptionHandler(err: Error, req: Request, res: Response, next: NextFunction) {
     if (res.headersSent) {
