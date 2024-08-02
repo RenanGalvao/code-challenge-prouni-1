@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import cors from 'cors'
 import { readFileSync } from 'fs'
 import config from '@/config/index.js'
-import { RateLimiter, ExceptionHandler, Custom404 } from '@/middlewares/index.js'
+import { RateLimiter, ExceptionHandler } from '@/middlewares/index.js'
 import { logger, appInitLog } from '@/utils/index.js'
 
 // Cached production assets
@@ -75,13 +75,13 @@ app.use('*', async (req, res) => {
     } else {
       template = templateHtml
       // @ts-ignore
-      render = (await import('./dist/server/entry-server.js')).render
+      render = (await import('./server/entry-server.js')).render
     }
 
     const [appHtml, preloadLinks] = await render(url, ssrManifest)
     const html = template
-      .replace(`<!--app-head-->`, preloadLinks)
-      .replace(`<!--app-html-->`, appHtml)
+      .replace('<!--preload-links-->', preloadLinks)
+      .replace('<!--app-html-->', appHtml)
 
     res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
   } catch (e: any) {
@@ -91,7 +91,6 @@ app.use('*', async (req, res) => {
   }
 })
 
-app.use(Custom404)
 app.use(ExceptionHandler)
 
 // Start http server

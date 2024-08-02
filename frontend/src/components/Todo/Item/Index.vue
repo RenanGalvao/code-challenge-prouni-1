@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as yup from 'yup'
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { validate, sendRequest } from '@/lib/utils/index.js'
 import { ApiResponse } from '@/lib/classes/index.js'
 import { Message, Task } from '@/lib/types/index.js'
@@ -8,6 +8,7 @@ import { Message, Task } from '@/lib/types/index.js'
 import CheckBox from './CheckBox.vue'
 import Input from './Input.vue'
 import Options from './Options.vue'
+import SimpleTransition from '@/components/SimpleTransition.vue'
 
 const emits = defineEmits({
     remove(vForKey: number) {
@@ -15,7 +16,8 @@ const emits = defineEmits({
     },
     messages(messages: Message[]) {
         return !!messages
-    }
+    },
+    'key-enter'() { return true }
 })
 
 const props = defineProps({
@@ -40,9 +42,23 @@ const props = defineProps({
     }
 })
 
+// Lifting textarea element ref to parent
+const textareaComponentRef = ref(null as InstanceType<typeof Input> | null)
+const textareaElementRef = computed(() => textareaComponentRef.value?.elementRef)
+defineExpose({
+    textareaElementRef,
+})
+
 const id = ref(props.id)
 const done = ref(props.done)
 const description = ref(props.description)
+
+// Simple animation
+// not using Transition Group since it clutches the screen when switching pages
+const show = ref(false)
+onMounted(() => {
+    show.value = true
+})
 
 function onCheckBoxChange(value: boolean) {
     done.value = value
@@ -54,8 +70,11 @@ function onDescriptionChange(value: string) {
 }
 
 async function onRemove() {
+    // animation
+    show.value = false
+
     if (id.value !== 0) {
-        removeTodo()
+        await removeTodo()
     }
 
     // tells parent component to remove from list
@@ -71,6 +90,10 @@ const schema = yup.object().shape({
 })
 
 async function saveTodo() {
+    if (description.value.length === 0) {
+        return
+    }
+
     const validation = validate({
         description: description.value,
         done: done.value
@@ -141,16 +164,21 @@ function requestCountDown() {
     }, REQUEST_COOL_DOWN)
 }
 
-function clearRequestCountDown() {
-    clearTimeout(requestTimer)
+function clearRequestCountDown(event: KeyboardEvent) {
+    // ignore Enter key as it's used to move to next item
+    if (event.key !== 'Enter') {
+        clearTimeout(requestTimer)
+    }
 }
 </script>
 
 <template>
-    <div class="flex">
-        <CheckBox :done :description @change="onCheckBoxChange" class="mr-1" />
-        <Input :done :description @change="onDescriptionChange" @keydown="clearRequestCountDown"
-            @keyup="requestCountDown" />
-        <Options :description @remove="onRemove" />
-    </div>
+    <SimpleTransition>
+        <div class="flex py-1 px-2 rounded-md shadow-lg" v-if="show">
+            <CheckBox :done :description @change="onCheckBoxChange" class="mr-1" />
+            <Input :done :description ref="textareaComponentRef" @change="onDescriptionChange"
+                @keydown="clearRequestCountDown" @keyup="requestCountDown" @key-enter="$emit('key-enter')" />
+            <Options :description @remove="onRemove" />
+        </div>
+    </SimpleTransition>
 </template>
