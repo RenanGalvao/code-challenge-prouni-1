@@ -26,7 +26,7 @@
 
 
 ## Sobre <a name="sobre"></a>
-A aplicação segue as orientações básicas do desafio. Foi feito como [SSR](https://vuejs.org/guide/scaling-up/ssr.html), isso significa que as páginas são inicialmente processadas pelo servidor e depois "hidratadas" no cliente. Apesar da proposta ser simples, busquei entregar um aplicativo com comportamento fluído:
+A aplicação segue as orientações básicas do desafio. Foi feito como [SSR](https://vuejs.org/guide/scaling-up/ssr.html), isso significa que as páginas são inicialmente processadas pelo servidor e depois "hidratadas" no cliente. Apesar do desafio ser simples, busquei entregar um aplicativo mais "completo" com comportamento fluído:
 
 - Ao apertar ``Enter`` abre o espaço para cadastrar uma nova tarefa, inclusive alternando de página se necessário
 - Ao apagar todo o texto a tarefa automaticamente é apagada
@@ -53,8 +53,8 @@ Note que apesar desse ser o desafio #1, na realidade fiz o desafio [#2](https://
 
 Note que se você não subir o [backend](../backend/README.md) também, serão apresentadas mensages de erro quando o aplicativo tentar fazer requisições à API.
 
-### "Produção"
-Inicie o projeto a partir do ``docker-compose.yml`` da pasta raiz.
+### Produção
+Inicie o projeto a partir do arquivo ``docker-compose.yml`` da pasta raiz.
 
 
 ## Principais Tecnologias <a name="tec"></a>

@@ -51,7 +51,7 @@ Este desafio foi feito após o [Desafio 2](https://github.com/RenanGalvao/code-c
 - Suba o servidor ``npm run dev``
 - URL de acesso: ``http://localhost:3000``
 
-### "Produção"
+### Produção
 Inicie o projeto a partir do arquivo ``docker-compose.yml`` da pasta raiz.
 
 ### Rotas

@@ -1,23 +1,23 @@
 services:
-  #web:
-  #  container_name: web
-  #  build:
-  #    context: frontend
-  #    no_cache: true
-  #  deploy:
-  #    restart_policy:
-  #      condition: on-failure
-  #      delay: 5s
-  #      window: 5s
-  #  healthcheck:
-  #    test: wget -qO- 0.0.0.0:3010 || exit 1
-  #    interval: 1m
-  #  networks:
-  #    - main_network
-  #  ports:
-  #    - 3010:3010
-  #  depends_on:
-  #    - api
+  web:
+    container_name: web
+    build:
+      context: frontend
+      no_cache: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 5s
+    healthcheck:
+      test: wget -qO- 0.0.0.0:3010 || exit 1
+      interval: 1m
+    networks:
+      - main_network
+    ports:
+      - 3010:3010
+    depends_on:
+      - api
 
   api:
     container_name: api
