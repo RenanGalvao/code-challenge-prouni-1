@@ -3,7 +3,7 @@
     <div v-if="!silent && isOpen" :class="`bg-${variant}`"
       class="toast min-w-full p-2 border-2 border-solid rounded mb-1 flex items-center justify-between md:min-w-80">
       <div>{{ message }}</div>
-      <button @click="close">Fechar</button>
+      <button class="ml-1" @click="close">Fechar</button>
     </div>
   </Transition>
 </template>

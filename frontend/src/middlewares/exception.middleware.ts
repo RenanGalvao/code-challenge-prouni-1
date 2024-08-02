@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { logger } from '@/utils/index.js'
 import { HTTP_ERROR_CODES } from '@/const/index.js'
 import { readFileSync } from 'fs'
+import config from '@/config/index.js'
 
 export function ExceptionHandler(err: Error, req: Request, res: Response, next: NextFunction) {
     if (res.headersSent) {
@@ -23,7 +24,9 @@ export function ExceptionHandler(err: Error, req: Request, res: Response, next: 
             res.status(500)
     }
 
-    const template = readFileSync('./error.html', 'utf-8')
+    const template = config.app.isProduction
+        ? readFileSync('./dist/client/error.html', 'utf-8')
+        : readFileSync('./error.html', 'utf-8')
     const html = template.replace('<!--error-->', err.message)
     res.set({ 'Content-Type': 'text/html' }).end(html)
 

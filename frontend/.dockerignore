@@ -1,0 +1,10 @@
+Dockerfile
+.dockerignore
+README.md
+.prettierrc
+.eslintrc.cjs
+.vscode
+node_modules
+build
+.env.*
+vite.config.js.timestamp-*

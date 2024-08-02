@@ -1,5 +1,5 @@
 // based on https://github.com/bluwy/create-vite-extra/tree/master/template-ssr-vue
-// and https://github.com/vitejs/vite-plugin-vue
+// and https://github.com/vitejs/vite-plugin-vue/tree/main/playground/ssr-vue
 import { ViteDevServer } from 'vite'
 import express from 'express'
 import helmet from 'helmet'
