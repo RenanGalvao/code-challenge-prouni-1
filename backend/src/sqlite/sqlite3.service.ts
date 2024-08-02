@@ -5,7 +5,7 @@ import { readFileSync } from 'fs'
 
 class Sqlite3Service extends Database {
     // used to paginate
-    getLimitOffsetFromQuery(query?: PaginationDto) {
+    private getLimitOffsetFromQuery(query?: PaginationDto) {
         query = Object.assign({}, { page: 1, itemsPerPage: 10 }, query)
 
         const page = +query.page!
@@ -40,13 +40,34 @@ class Sqlite3Service extends Database {
         })
     }
 
-    allAsync<T>(sql: string, params: any = undefined) {
-        return new Promise<T[]>((resolve, reject) => {
-            super.all<T>(sql, params, (err, row) => {
-                if (err) {
-                    reject(err)
+    findManyAsync<T>(sql: string, query?: PaginationDto) {
+        return new Promise<{ data: T[]; totalCount: number; totalPages: number }>((resolve, reject) => {
+            super.serialize(async () => {
+                // table is the last word in the sql query (should be)
+                const originalTable = sql.substring(sql.indexOf('FROM') + ('FROM'.length)).trim()
+                const totalCountQuery = `SELECT COUNT(*) as totalCount FROM ${originalTable}`
+                const { totalCount } = await this.getAsync<{ totalCount: number }>(totalCountQuery)
+
+                // Append LIMIT
+                sql += ' LIMIT $limit OFFSET $offset'
+
+                // LIMIT and OFFSET (pagination) params
+                const { limit, offset } = this.getLimitOffsetFromQuery(query)
+                const params = {
+                    $limit: limit,
+                    $offset: offset
                 }
-                resolve(row)
+
+                // actual data
+                super.all<T>(sql, params, (err, rows) => {
+                    if (err) {
+                        reject(err)
+                    }
+
+                    // ensures 1 as min totalPages
+                    const totalPages = Math.max(Math.ceil(totalCount / limit), 1)
+                    resolve({ data: rows, totalCount, totalPages })
+                })
             })
         })
     }

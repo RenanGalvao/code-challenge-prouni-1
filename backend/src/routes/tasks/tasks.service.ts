@@ -6,14 +6,8 @@ import { throwValidationError } from '@src/utils'
 
 
 async function findMany(query?: PaginationDto) {
-    const { limit, offset } = sqlite3Service.getLimitOffsetFromQuery(query)
-    const sql = 'SELECT id, description, done, createdAt, updatedAt FROM tasks LIMIT $limit OFFSET $offset'
-    const values = {
-        $limit: limit,
-        $offset: offset
-    }
-
-    return (await sqlite3Service.allAsync<TaskModel>(sql, values))
+    const sql = 'SELECT id, description, done, createdAt, updatedAt FROM tasks'
+    return (await sqlite3Service.findManyAsync<TaskModel>(sql, query))
 }
 
 async function findOne(id: string) {
