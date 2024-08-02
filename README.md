@@ -34,7 +34,8 @@ Esse desafio (código) é mais refinado do que o outro apesar de ter requeriment
 A lista de tarefas é simples porém funcional e fluída, o backend possui validações e meios para não "crashar" atoa.
 
 ## Preview <a name="preview"></a>
-<!-- Preview Video HERE -->
+[preview.webm](https://github.com/user-attachments/assets/9ebadab4-d3b6-46a7-87f4-9c84deec8222)
+
 
 
 
