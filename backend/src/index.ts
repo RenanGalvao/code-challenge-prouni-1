@@ -7,7 +7,7 @@ import config from '@src/config'
 import { HealthRouter } from '@src/routes/health'
 import { TasksRouter } from '@src/routes/tasks'
 import { RateLimiter, ExceptionHandler, Custom404 } from '@src/middlewares'
-import { logger, appInitLog } from '@src/utils'
+import { logger, appInitLog, gracefulShutdown } from '@src/utils'
 
 const app = express()
 
@@ -37,3 +37,4 @@ const server = app.listen(config.app.port, () => {
     appInitLog(app._router)
     logger.info(`Server is running at http://localhost:${config.app.port}`)
 })
+gracefulShutdown(server)
