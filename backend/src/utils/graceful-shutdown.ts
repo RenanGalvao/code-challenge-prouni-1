@@ -5,6 +5,11 @@ import { sqlite3Service } from '@src/sqlite'
 function tasks(server: Server, signal: string) {
     logger.info(`${signal} signal received.`)
     server.close(() => {
+        // in development nodemon get blocked
+        if (process.env.NODE_ENV !== 'production') {
+            process.exit(0)
+        }
+
         try {
             logger.info('Closing Sqlite3 connection.')
             sqlite3Service.close((err) => {

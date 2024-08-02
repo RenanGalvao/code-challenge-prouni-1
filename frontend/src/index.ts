@@ -7,7 +7,7 @@ import cors from 'cors'
 import { readFileSync } from 'fs'
 import config from '@/config/index.js'
 import { RateLimiter, ExceptionHandler } from '@/middlewares/index.js'
-import { logger, appInitLog } from '@/utils/index.js'
+import { logger, appInitLog, gracefulShutdown } from '@/utils/index.js'
 
 // Cached production assets
 const templateHtml = config.app.isProduction
@@ -94,7 +94,8 @@ app.use('*', async (req, res) => {
 app.use(ExceptionHandler)
 
 // Start http server
-app.listen(config.app.port, () => {
+const server = app.listen(config.app.port, () => {
   appInitLog(app._router)
   logger.info(`Server is running at http://localhost:${config.app.port}`)
 })
+gracefulShutdown(server)
