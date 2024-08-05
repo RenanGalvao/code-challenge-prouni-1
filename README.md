@@ -34,10 +34,10 @@ Esse desafio (código) é mais refinado do que o outro apesar de ter requeriment
 
 A lista de tarefas é simples porém funcional e fluída, o backend possui validações e meios para não "crashar" atoa.
 
+Para informações mais detalhadas leia o README do [backend](./backend/README.md) ou [frontend](./frontend/README.md).
+
 ## Preview <a name="preview"></a>
 [preview.webm](https://github.com/user-attachments/assets/9ebadab4-d3b6-46a7-87f4-9c84deec8222)
-
-
 
 
 ## Requisitos <a name="requisitos"></a>
@@ -50,13 +50,18 @@ A lista de tarefas é simples porém funcional e fluída, o backend possui valid
 - Utilize o comando ``docker compose up -d --build`` para subir os serviços
 - Acesse [http://localhost:3010](http://localhost:3010) pelo navegador
 - Utilize ``docker compose down`` para parar os serviços
+- Para remover as imagens criadas utilize ``docker image rm code-challenge-todo-web code-challenge-todo-api``
 
 
 ## Autor <a name="autor"></a>
 [@RenanGalvao](https://renangalvao.github.io/whoami/)
 
+
 ## Contribuições <a name="contrib"></a>
 Como este projeto é um code challenge, as contribuições estarão desativadas.
 
+
 ## Links <a name="links"></a>
-[Repositório do challenge](https://github.com/prounion-software/code-challenge)
+- [Repositório do challenge](https://github.com/prounion-software/code-challenge)
+- [Backend](./backend)
+- [Frontend](./backend)
